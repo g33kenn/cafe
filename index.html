@@ -119,6 +119,11 @@
                         <label for="beanName" class="block text-sm font-medium text-stone-700 mb-1">Coffee Bean Name</label>
                         <input type="text" id="beanName" name="beanName" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#6F4E37] focus:border-[#6F4E37] transition-colors" placeholder="e.g., Ethiopian Yirgacheffe">
                     </div>
+                    
+                    <div>
+                        <label for="country" class="block text-sm font-medium text-stone-700 mb-1">Country of Origin</label>
+                        <input type="text" id="country" name="country" class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#6F4E37] focus:border-[#6F4E37] transition-colors" placeholder="e.g., Ethiopia">
+                    </div>
 
                     <div>
                         <label for="bannerColor" class="block text-sm font-medium text-stone-700 mb-1">Banner Color</label>
@@ -176,12 +181,12 @@
         // then scroll down to "Your apps" and click the "</>" icon to find your web app's config.
         // DO NOT COMMIT THIS FILE WITH YOUR KEYS FILLED IN.
         const firebaseConfig = {
-          apiKey: "AIzaSyC7XjObhFPNIb9lz7HjMT_JYoNu4yUlpCg",
-          authDomain: "coffee-6ef98.firebaseapp.com",
-          projectId: "coffee-6ef98",
-          storageBucket: "coffee-6ef98.firebasestorage.app",
-          messagingSenderId: "168593062496",
-          appId: "1:168593062496:web:8c52d52d588c1b06116105"
+        apiKey: "AIzaSyC7XjObhFPNIb9lz7HjMT_JYoNu4yUlpCg",
+        authDomain: "coffee-6ef98.firebaseapp.com",
+        projectId: "coffee-6ef98",
+        storageBucket: "coffee-6ef98.firebasestorage.app",
+        messagingSenderId: "168593062496",
+        appId: "1:168593062496:web:8c52d52d588c1b06116105"
         };
 
         // --- DOM ELEMENTS ---
@@ -225,8 +230,9 @@
             noRecipesMessage.classList.add('hidden');
             recipesContainer.innerHTML = recipes.map(recipe => `
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300">
-                    <div class="h-40 p-4 flex items-center justify-center text-center" style="background-color: ${recipe.bannerColor || '#6F4E37'};">
+                    <div class="h-40 p-4 flex flex-col items-center justify-center text-center" style="background-color: ${recipe.bannerColor || '#6F4E37'};">
                         <h3 class="font-lora text-4xl font-bold text-black break-words">${recipe.beanName}</h3>
+                        <p class="font-lora text-lg text-black mt-1 country-origin">${recipe.country || ''}</p>
                     </div>
                     <div class="p-6 flex-grow flex flex-col justify-between">
                         <div class="grid grid-cols-3 text-center divide-x divide-stone-200">
@@ -290,6 +296,7 @@
             const id = document.getElementById('recipeId').value;
             const recipeData = {
                 beanName: document.getElementById('beanName').value,
+                country: document.getElementById('country').value,
                 bannerColor: document.getElementById('bannerColor').value,
                 coffeeAmount: parseFloat(document.getElementById('coffeeAmount').value),
                 grindSize: document.getElementById('grindSize').value,
@@ -315,6 +322,7 @@
             const recipe = {
                 id: id,
                 beanName: recipeCard.querySelector('h3').textContent,
+                country: recipeCard.querySelector('.country-origin').textContent,
                 bannerColor: recipeCard.querySelector('[style^="background-color"]').style.backgroundColor,
                 coffeeAmount: recipeCard.querySelector('.grid > div:nth-child(1) .font-semibold').textContent.replace('g', ''),
                 grindSize: recipeCard.querySelector('.grid > div:nth-child(2) .font-semibold').textContent,
@@ -323,6 +331,7 @@
             
             document.getElementById('recipeId').value = recipe.id;
             document.getElementById('beanName').value = recipe.beanName;
+            document.getElementById('country').value = recipe.country;
             const rgb = recipe.bannerColor.match(/\d+/g);
             const hex = rgb ? `#${parseInt(rgb[0]).toString(16).padStart(2, '0')}${parseInt(rgb[1]).toString(16).padStart(2, '0')}${parseInt(rgb[2]).toString(16).padStart(2, '0')}` : '#6F4E37';
             document.getElementById('bannerColor').value = hex;
