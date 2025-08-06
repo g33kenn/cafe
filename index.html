@@ -3,118 +3,431 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coffee Recipes</title>
+    <title>My Coffee Recipes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lora:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* Using a coffee-themed font for headings */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #F3EFEA; /* Light beige, like latte foam */
+            background-color: #F3EADF; /* A light, creamy coffee background */
         }
         .font-lora {
             font-family: 'Lora', serif;
         }
+        /* Custom scrollbar for a more thematic feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F3EADF;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #6F4E37; /* Coffee brown */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4a3525;
+        }
+        /* Hide the ugly default color input UI */
+        input[type="color"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        input[type="color"]::-webkit-color-swatch {
+            border: 2px solid #D1D5DB;
+            border-radius: 50%;
+        }
     </style>
 </head>
-<body class="text-gray-800">
+<body class="text-stone-800">
 
-    <!-- Header -->
-    <header class="text-center py-12">
-        <h1 class="font-lora text-5xl font-bold text-[#4A2C2A]">My Coffee Recipes</h1>
-        <p class="text-lg text-gray-600 mt-2">A collection of personal coffee brewing recipes.</p>
-    </header>
-
-    <!-- Recipe Cards Container -->
-    <main class="container mx-auto px-4 pb-16">
-        <div id="card-container" class="flex flex-wrap justify-center gap-8 md:gap-12">
-
-            <!-- Card 1 -->
-            <div class="recipe-card w-80 bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transition-transform duration-300 hover:scale-105">
-                <!-- Banner Section -->
-                <div class="banner h-40 p-6 flex flex-col justify-center">
-                    <h2 class="font-lora text-3xl font-bold text-black">Santa Monica Tubaina</h2>
-                    <h3 class="text-lg text-black opacity-90">Brazil</h3>
-                </div>
-                <!-- Details Section -->
-                <div class="p-6 flex-grow">
-                    <ul class="space-y-4 text-lg">
-                        <li class="flex justify-between items-center">
-                            <span class="font-semibold">Coffee (g)</span>
-                            <span class="font-bold text-xl text-[#4A2C2A]">18</span>
-                        </li>
-                        <li class="flex justify-between items-center">
-                            <span class="font-semibold">Grind</span>
-                            <span class="font-bold text-xl text-[#4A2C2A]">2</span>
-                        </li>
-                        <li class="flex justify-between items-center">
-                            <span class="font-semibold">Yield (g)</span>
-                            <span class="font-bold text-xl text-[#4A2C2A]">20</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="recipe-card w-80 bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transition-transform duration-300 hover:scale-105">
-                <!-- Banner Section -->
-                <div class="banner h-40 p-6 flex flex-col justify-center">
-                    <h2 class="font-lora text-3xl font-bold text-black">Habtamu F. Aga</h2>
-                    <h3 class="text-lg text-black opacity-90">Ethiopia</h3>
-                </div>
-                <!-- Details Section -->
-                <div class="p-6 flex-grow">
-                    <ul class="space-y-4 text-lg">
-                        <li class="flex justify-between items-center">
-                            <span class="font-semibold">Coffee (g)</span>
-                            <span class="font-bold text-xl text-[#4A2C2A]">18</span>
-                        </li>
-                        <li class="flex justify-between items-center">
-                            <span class="font-semibold">Grind</span>
-                            <span class="font-bold text-xl text-[#4A2C2A]">2.2</span>
-                        </li>
-                        <li class="flex justify-between items-center">
-                            <span class="font-semibold">Yield (g)</span>
-                            <span class="font-bold text-xl text-[#4A2C2A]">20</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-
+    <!-- Auth Container -->
+    <div class="absolute top-4 right-4">
+        <div id="auth-container">
+            <button id="signInBtn" class="bg-white text-stone-700 font-semibold py-2 px-4 border border-stone-300 rounded-lg shadow hover:bg-stone-100 transition-colors flex items-center gap-2">
+                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.574l6.19,5.238C39.904,36.218,44,30.606,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
+                Sign in with Google
+            </button>
         </div>
-    </main>
+        <div id="user-info" class="hidden items-center gap-4">
+            <p id="userName" class="text-stone-700 font-semibold"></p>
+            <button id="signOutBtn" class="bg-stone-600 hover:bg-stone-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition-colors">Sign Out</button>
+        </div>
+    </div>
 
-    <script>
-        // This script automatically assigns a unique, light color to each recipe card banner.
-        document.addEventListener('DOMContentLoaded', () => {
-            // A predefined list of light, pleasant colors that provide good contrast with black text.
-            const bannerColors = [
-                '#d4e1f5', // Light Periwinkle
-                '#fdebd0', // Antique White
-                '#d5f5e3', // Honeydew
-                '#f5d4e1', // Misty Rose
-                '#e8d4f5', // Thistle
-                '#d4f5f5'  // Light Cyan
-            ];
+    <!-- Main Container -->
+    <div class="container mx-auto p-4 md:p-8">
 
-            // Select all recipe cards on the page.
-            const recipeCards = document.querySelectorAll('.recipe-card');
+        <!-- Header -->
+        <header class="text-center mb-8 md:mb-12 pt-16">
+            <h1 class="font-lora text-4xl md:text-6xl font-bold text-[#4a3525]">My Coffee Recipes</h1>
+            <p class="mt-2 text-lg text-stone-600">A personal collection of brewing methods & beans.</p>
+        </header>
 
-            // Iterate over each card and assign a color from the list.
-            recipeCards.forEach((card, index) => {
-                const banner = card.querySelector('.banner');
-                if (banner) {
-                    // Use the modulo operator to cycle through the color array.
-                    // This ensures that we can support any number of cards without running out of colors,
-                    // and each card in the initial sequence gets a unique color.
-                    banner.style.backgroundColor = bannerColors[index % bannerColors.length];
+        <!-- Logged Out Message -->
+        <div id="loggedOutMessage" class="text-center py-16">
+            <h3 class="text-xl font-semibold text-stone-800">Welcome!</h3>
+            <p class="mt-2 text-stone-600">Please sign in with your Google account to view and manage your recipes.</p>
+        </div>
+        
+        <!-- Logged In Content -->
+        <div id="loggedInContent" class="hidden">
+            <!-- Action Bar -->
+            <div class="flex justify-center mb-8">
+                <button id="addRecipeBtn" class="bg-[#6F4E37] hover:bg-[#4a3525] text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    + Add New Recipe
+                </button>
+            </div>
+
+            <!-- Recipe Cards Grid -->
+            <div id="recipesContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+                <!-- Recipe cards will be injected here by JavaScript -->
+            </div>
+             <!-- Placeholder for when there are no recipes -->
+            <div id="noRecipesMessage" class="hidden text-center py-16">
+                <svg class="mx-auto h-12 w-12 text-stone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                </svg>
+                <h3 class="mt-2 text-sm font-semibold text-stone-900">No recipes yet</h3>
+                <p class="mt-1 text-sm text-stone-500">Get started by creating a new recipe.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Add/Edit Recipe -->
+    <div id="recipeModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300 ease-in-out scale-95 opacity-0" id="modalContent">
+            <form id="recipeForm" class="p-6 md:p-8">
+                <h2 id="modalTitle" class="font-lora text-2xl font-bold mb-6 text-[#4a3525]">Add a New Recipe</h2>
+                <input type="hidden" id="recipeId">
+
+                <!-- Form Fields -->
+                <div class="space-y-6">
+                    <div>
+                        <label for="beanName" class="block text-sm font-medium text-stone-700 mb-1">Coffee Bean Name</label>
+                        <input type="text" id="beanName" name="beanName" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#6F4E37] focus:border-[#6F4E37] transition-colors" placeholder="e.g., Ethiopian Yirgacheffe">
+                    </div>
+
+                    <div>
+                        <label for="bannerColor" class="block text-sm font-medium text-stone-700 mb-1">Banner Color</label>
+                        <div class="flex items-center gap-3">
+                            <input type="color" id="bannerColor" name="bannerColor" value="#6F4E37" class="border-stone-300">
+                            <span class="text-sm text-stone-500">Click the circle to pick a color</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="coffeeAmount" class="block text-sm font-medium text-stone-700 mb-1">Coffee (g)</label>
+                            <input type="number" id="coffeeAmount" name="coffeeAmount" step="0.1" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#6F4E37] focus:border-[#6F4E37] transition-colors" placeholder="15.0">
+                        </div>
+                        <div>
+                            <label for="grindSize" class="block text-sm font-medium text-stone-700 mb-1">Grind</label>
+                            <input type="text" id="grindSize" name="grindSize" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#6F4E37] focus:border-[#6F4E37] transition-colors" placeholder="Medium-Fine">
+                        </div>
+                        <div>
+                            <label for="yieldAmount" class="block text-sm font-medium text-stone-700 mb-1">Yield (g)</label>
+                            <input type="number" id="yieldAmount" name="yieldAmount" step="1" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#6F4E37] focus:border-[#6F4E37] transition-colors" placeholder="250">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="mt-8 flex justify-end gap-3">
+                    <button type="button" id="cancelBtn" class="px-6 py-2 border border-stone-300 rounded-lg text-stone-700 hover:bg-stone-100 transition-colors">Cancel</button>
+                    <button type="submit" class="px-6 py-2 bg-[#6F4E37] hover:bg-[#4a3525] text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all">Save Recipe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Deletion Confirmation Modal -->
+    <div id="deleteConfirmModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-8 text-center transform transition-all duration-300 ease-in-out scale-95 opacity-0" id="deleteModalContent">
+            <h3 class="text-xl font-semibold text-stone-800">Are you sure?</h3>
+            <p class="mt-2 text-stone-600">Do you really want to delete this recipe? This action cannot be undone.</p>
+            <div class="mt-6 flex justify-center gap-4">
+                <button id="cancelDeleteBtn" class="px-8 py-2 border border-stone-300 rounded-lg text-stone-700 hover:bg-stone-100 transition-colors font-semibold">Cancel</button>
+                <button id="confirmDeleteBtn" class="px-8 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all">Delete</button>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module">
+        // Firebase Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, addDoc, setDoc, deleteDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- IMPORTANT: PASTE YOUR FIREBASE CONFIGURATION HERE ---
+        // To get this, go to your Firebase project, click the gear icon > Project settings,
+        // then scroll down to "Your apps" and click the "</>" icon to find your web app's config.
+        // DO NOT COMMIT THIS FILE WITH YOUR KEYS FILLED IN.
+        const firebaseConfig = {
+          apiKey: "AIzaSyC7XjObhFPNIb9lz7HjMT_JYoNu4yUlpCg",
+          authDomain: "coffee-6ef98.firebaseapp.com",
+          projectId: "coffee-6ef98",
+          storageBucket: "coffee-6ef98.firebasestorage.app",
+          messagingSenderId: "168593062496",
+          appId: "1:168593062496:web:8c52d52d588c1b06116105"
+        };
+
+        // --- DOM ELEMENTS ---
+        const signInBtn = document.getElementById('signInBtn');
+        const signOutBtn = document.getElementById('signOutBtn');
+        const userInfo = document.getElementById('user-info');
+        const userName = document.getElementById('userName');
+        const loggedOutMessage = document.getElementById('loggedOutMessage');
+        const loggedInContent = document.getElementById('loggedInContent');
+
+        const recipesContainer = document.getElementById('recipesContainer');
+        const noRecipesMessage = document.getElementById('noRecipesMessage');
+        const addRecipeBtn = document.getElementById('addRecipeBtn');
+        
+        const recipeModal = document.getElementById('recipeModal');
+        const modalContent = document.getElementById('modalContent');
+        const recipeForm = document.getElementById('recipeForm');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const modalTitle = document.getElementById('modalTitle');
+
+        const deleteConfirmModal = document.getElementById('deleteConfirmModal');
+        const deleteModalContent = document.getElementById('deleteModalContent');
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        
+        // --- FIREBASE & APP STATE ---
+        let db, auth, userId;
+        let unsubscribeFromRecipes = null;
+        let recipeIdToDelete = null;
+
+        /**
+         * Renders the recipe cards on the page.
+         */
+        function renderRecipes(recipes) {
+            if (recipes.length === 0) {
+                recipesContainer.innerHTML = '';
+                noRecipesMessage.classList.remove('hidden');
+                return;
+            }
+            
+            noRecipesMessage.classList.add('hidden');
+            recipesContainer.innerHTML = recipes.map(recipe => `
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300">
+                    <div class="h-40 p-4 flex items-center justify-center text-center" style="background-color: ${recipe.bannerColor || '#6F4E37'};">
+                        <h3 class="font-lora text-4xl font-bold text-black break-words">${recipe.beanName}</h3>
+                    </div>
+                    <div class="p-6 flex-grow flex flex-col justify-between">
+                        <div class="grid grid-cols-3 text-center divide-x divide-stone-200">
+                            <div>
+                                <p class="text-sm text-stone-500">Coffee</p>
+                                <p class="font-semibold text-xl">${recipe.coffeeAmount}g</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-stone-500">Grind</p>
+                                <p class="font-semibold text-xl">${recipe.grindSize}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-stone-500">Yield</p>
+                                <p class="font-semibold text-xl">${recipe.yieldAmount}g</p>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-stone-200 flex justify-end gap-2">
+                            <button class="edit-btn text-sm text-stone-600 hover:text-blue-600 font-semibold py-1 px-3 rounded" data-id="${recipe.id}">Edit</button>
+                            <button class="delete-btn text-sm text-stone-600 hover:text-red-600 font-semibold py-1 px-3 rounded" data-id="${recipe.id}">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', handleEditClick));
+            document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', handleDeleteClick));
+        }
+
+        function toggleFormModal(show) {
+            if (show) {
+                recipeModal.classList.remove('hidden');
+                setTimeout(() => { modalContent.classList.remove('scale-95', 'opacity-0'); }, 10);
+            } else {
+                modalContent.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => { recipeModal.classList.add('hidden'); }, 300);
+            }
+        }
+        
+        function toggleDeleteModal(show) {
+            if (show) {
+                deleteConfirmModal.classList.remove('hidden');
+                setTimeout(() => { deleteModalContent.classList.remove('scale-95', 'opacity-0'); }, 10);
+            } else {
+                deleteModalContent.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => { deleteConfirmModal.classList.add('hidden'); }, 300);
+            }
+        }
+
+        function openAddModal() {
+            recipeForm.reset();
+            document.getElementById('recipeId').value = '';
+            document.getElementById('bannerColor').value = '#6F4E37';
+            modalTitle.textContent = 'Add a New Recipe';
+            toggleFormModal(true);
+        }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            if (!userId) return;
+
+            const id = document.getElementById('recipeId').value;
+            const recipeData = {
+                beanName: document.getElementById('beanName').value,
+                bannerColor: document.getElementById('bannerColor').value,
+                coffeeAmount: parseFloat(document.getElementById('coffeeAmount').value),
+                grindSize: document.getElementById('grindSize').value,
+                yieldAmount: parseFloat(document.getElementById('yieldAmount').value),
+            };
+
+            try {
+                const collectionPath = `users/${userId}/coffee_recipes`;
+                if (id) {
+                    await setDoc(doc(db, collectionPath, id), recipeData);
+                } else {
+                    await addDoc(collection(db, collectionPath), recipeData);
+                }
+                toggleFormModal(false);
+            } catch (error) {
+                console.error("Error saving recipe: ", error);
+            }
+        }
+
+        function handleEditClick(e) {
+            const id = e.target.dataset.id;
+            const recipeCard = e.target.closest('.bg-white');
+            const recipe = {
+                id: id,
+                beanName: recipeCard.querySelector('h3').textContent,
+                bannerColor: recipeCard.querySelector('[style^="background-color"]').style.backgroundColor,
+                coffeeAmount: recipeCard.querySelector('.grid > div:nth-child(1) .font-semibold').textContent.replace('g', ''),
+                grindSize: recipeCard.querySelector('.grid > div:nth-child(2) .font-semibold').textContent,
+                yieldAmount: recipeCard.querySelector('.grid > div:nth-child(3) .font-semibold').textContent.replace('g', ''),
+            };
+            
+            document.getElementById('recipeId').value = recipe.id;
+            document.getElementById('beanName').value = recipe.beanName;
+            const rgb = recipe.bannerColor.match(/\d+/g);
+            const hex = rgb ? `#${parseInt(rgb[0]).toString(16).padStart(2, '0')}${parseInt(rgb[1]).toString(16).padStart(2, '0')}${parseInt(rgb[2]).toString(16).padStart(2, '0')}` : '#6F4E37';
+            document.getElementById('bannerColor').value = hex;
+            document.getElementById('coffeeAmount').value = recipe.coffeeAmount;
+            document.getElementById('grindSize').value = recipe.grindSize;
+            document.getElementById('yieldAmount').value = recipe.yieldAmount;
+            
+            modalTitle.textContent = 'Edit Recipe';
+            toggleFormModal(true);
+        }
+
+        function handleDeleteClick(e) {
+            recipeIdToDelete = e.target.dataset.id;
+            toggleDeleteModal(true);
+        }
+
+        async function confirmDeletion() {
+            if (!recipeIdToDelete || !userId) return;
+            try {
+                await deleteDoc(doc(db, `users/${userId}/coffee_recipes`, recipeIdToDelete));
+            } catch (error) {
+                console.error("Error deleting recipe: ", error);
+            } finally {
+                recipeIdToDelete = null;
+                toggleDeleteModal(false);
+            }
+        }
+        
+        function subscribeToRecipes() {
+            if (unsubscribeFromRecipes) unsubscribeFromRecipes();
+            if (!userId) return;
+
+            const q = query(collection(db, `users/${userId}/coffee_recipes`));
+            unsubscribeFromRecipes = onSnapshot(q, (querySnapshot) => {
+                const recipes = [];
+                querySnapshot.forEach((doc) => {
+                    recipes.push({ id: doc.id, ...doc.data() });
+                });
+                renderRecipes(recipes);
+            }, (error) => {
+                console.error("Error fetching recipes:", error);
+                renderRecipes([]);
+            });
+        }
+
+        // --- AUTHENTICATION FUNCTIONS ---
+        async function handleGoogleSignIn() {
+            const provider = new GoogleAuthProvider();
+            try {
+                await signInWithPopup(auth, provider);
+            } catch (error) {
+                console.error("Error during sign-in:", error);
+            }
+        }
+
+        async function handleSignOut() {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error("Error during sign-out:", error);
+            }
+        }
+
+        // --- INITIALIZATION ---
+        function main() {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // User is signed in
+                    userId = user.uid;
+                    userName.textContent = user.displayName || 'User';
+                    userInfo.classList.remove('hidden');
+                    userInfo.classList.add('flex');
+                    signInBtn.parentElement.classList.add('hidden');
+                    loggedOutMessage.classList.add('hidden');
+                    loggedInContent.classList.remove('hidden');
+                    subscribeToRecipes();
+                } else {
+                    // User is signed out
+                    userId = null;
+                    if (unsubscribeFromRecipes) unsubscribeFromRecipes();
+                    renderRecipes([]);
+                    userInfo.classList.add('hidden');
+                    userInfo.classList.remove('flex');
+                    signInBtn.parentElement.classList.remove('hidden');
+                    loggedOutMessage.classList.remove('hidden');
+                    loggedInContent.classList.add('hidden');
                 }
             });
-        });
-    </script>
 
+            // Event Listeners
+            signInBtn.addEventListener('click', handleGoogleSignIn);
+            signOutBtn.addEventListener('click', handleSignOut);
+            addRecipeBtn.addEventListener('click', openAddModal);
+            cancelBtn.addEventListener('click', () => toggleFormModal(false));
+            recipeForm.addEventListener('submit', handleFormSubmit);
+            cancelDeleteBtn.addEventListener('click', () => toggleDeleteModal(false));
+            confirmDeleteBtn.addEventListener('click', confirmDeletion);
+        }
+
+        main();
+
+    </script>
 </body>
 </html>
