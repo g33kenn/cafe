@@ -29,44 +29,13 @@
 
     <!-- Recipe Cards Container -->
     <main class="container mx-auto px-4 pb-16">
-        <div class="flex flex-wrap justify-center gap-8 md:gap-12">
+        <div id="card-container" class="flex flex-wrap justify-center gap-8 md:gap-12">
 
             <!-- Card 1 -->
             <div class="recipe-card w-80 bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transition-transform duration-300 hover:scale-105">
                 <!-- Banner Section -->
-                <div class="banner h-40 p-6 flex flex-col justify-center" style="background-color: #A5694B;">
-                    <h2 class="font-lora text-3xl font-bold text-black">Titre</h2>
-                    <h3 class="text-lg text-black opacity-90">France</h3>
-                </div>
-                <!-- Details Section -->
-                <div class="p-6 flex-grow">
-                    <ul class="space-y-4 text-lg">
-                        <li class="flex justify-between items-center">
-                            <span class="font-semibold">Coffee (g)</span>
-                            <span class="font-bold text-xl text-[#4A2C2A]">18</span>
-                        </li>
-                        <li class="flex justify-between items-center">
-                            <span class="font-semibold">Grind</span>
-                            <span class="font-bold text-xl text-[#4A2C2A]">2</span>
-                        </li>
-                        <li class="flex justify-between items-center">
-                            <span class="font-semibold">Yield (g)</span>
-                            <span class="font-bold text-xl text-[#4A2C2A]">20</span>
-                        </li>
-                    </ul>
-                </div>
-                <!-- Color Picker -->
-                <div class="p-4 bg-gray-50 border-t border-gray-200 flex items-center justify-center gap-3">
-                    <label for="color-picker-1" class="text-sm font-medium text-gray-600">Banner Color:</label>
-                    <input type="color" id="color-picker-1" value="#A5694B" class="w-8 h-8 rounded-full cursor-pointer border-2 border-gray-300">
-                </div>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="recipe-card w-80 bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transition-transform duration-300 hover:scale-105">
-                <!-- Banner Section -->
-                <div class="banner h-40 p-6 flex flex-col justify-center" style="background-color: #C4A484;">
-                    <h2 class="font-lora text-3xl font-bold text-black">Titre 2</h2>
+                <div class="banner h-40 p-6 flex flex-col justify-center">
+                    <h2 class="font-lora text-3xl font-bold text-black">Santa Monica Tubaina</h2>
                     <h3 class="text-lg text-black opacity-90">Brazil</h3>
                 </div>
                 <!-- Details Section -->
@@ -86,39 +55,64 @@
                         </li>
                     </ul>
                 </div>
-                <!-- Color Picker -->
-                <div class="p-4 bg-gray-50 border-t border-gray-200 flex items-center justify-center gap-3">
-                     <label for="color-picker-2" class="text-sm font-medium text-gray-600">Banner Color:</label>
-                    <input type="color" id="color-picker-2" value="#C4A484" class="w-8 h-8 rounded-full cursor-pointer border-2 border-gray-300">
+            </div>
+
+            <!-- Card 2 -->
+            <div class="recipe-card w-80 bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transition-transform duration-300 hover:scale-105">
+                <!-- Banner Section -->
+                <div class="banner h-40 p-6 flex flex-col justify-center">
+                    <h2 class="font-lora text-3xl font-bold text-black">Habtamu F. Aga</h2>
+                    <h3 class="text-lg text-black opacity-90">Ethiopia</h3>
+                </div>
+                <!-- Details Section -->
+                <div class="p-6 flex-grow">
+                    <ul class="space-y-4 text-lg">
+                        <li class="flex justify-between items-center">
+                            <span class="font-semibold">Coffee (g)</span>
+                            <span class="font-bold text-xl text-[#4A2C2A]">18</span>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span class="font-semibold">Grind</span>
+                            <span class="font-bold text-xl text-[#4A2C2A]">2.2</span>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span class="font-semibold">Yield (g)</span>
+                            <span class="font-bold text-xl text-[#4A2C2A]">20</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
+
 
         </div>
     </main>
 
     <script>
-        // This script handles the color changing functionality for the recipe card banners.
-        
-        // Function to set up a color picker for a specific card
-        function setupColorPicker(pickerId) {
-            const colorPicker = document.getElementById(pickerId);
-            if (!colorPicker) return;
-
-            // Find the parent recipe card and its banner
-            const card = colorPicker.closest('.recipe-card');
-            const banner = card.querySelector('.banner');
-
-            // Add an event listener to the color picker
-            colorPicker.addEventListener('input', (event) => {
-                // Update the banner's background color with the selected value
-                banner.style.backgroundColor = event.target.value;
-            });
-        }
-
-        // Initialize the color pickers for all cards
+        // This script automatically assigns a unique, light color to each recipe card banner.
         document.addEventListener('DOMContentLoaded', () => {
-            setupColorPicker('color-picker-1');
-            setupColorPicker('color-picker-2');
+            // A predefined list of light, pleasant colors that provide good contrast with black text.
+            const bannerColors = [
+                '#d4e1f5', // Light Periwinkle
+                '#fdebd0', // Antique White
+                '#d5f5e3', // Honeydew
+                '#f5d4e1', // Misty Rose
+                '#e8d4f5', // Thistle
+                '#d4f5f5'  // Light Cyan
+            ];
+
+            // Select all recipe cards on the page.
+            const recipeCards = document.querySelectorAll('.recipe-card');
+
+            // Iterate over each card and assign a color from the list.
+            recipeCards.forEach((card, index) => {
+                const banner = card.querySelector('.banner');
+                if (banner) {
+                    // Use the modulo operator to cycle through the color array.
+                    // This ensures that we can support any number of cards without running out of colors,
+                    // and each card in the initial sequence gets a unique color.
+                    banner.style.backgroundColor = bannerColors[index % bannerColors.length];
+                }
+            });
         });
     </script>
 
