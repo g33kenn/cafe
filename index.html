@@ -98,9 +98,12 @@
             </div>
 
             <!-- Action Bar -->
-            <div class="flex justify-center mt-8">
+            <div class="flex justify-center mt-8 space-x-4">
                 <button id="addRecipeBtn" class="bg-[#6F4E37] hover:bg-[#4a3525] text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out">
                     + Add New Recipe
+                </button>
+                <button id="compassBtn" class="bg-white hover:bg-stone-100 text-stone-700 font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    Compass
                 </button>
             </div>
         </div>
@@ -174,6 +177,18 @@
             </div>
         </div>
     </div>
+
+    <!-- Compass Image Modal -->
+    <div id="compassModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg relative transform transition-all duration-300 ease-in-out scale-95 opacity-0" id="compassModalContent">
+            <button id="closeCompassBtn" class="absolute top-4 right-4 text-stone-600 hover:text-stone-900">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <img src="compass.jpg" alt="Coffee Compass" class="rounded-2xl">
+        </div>
+    </div>
     
     <script type="module">
         // Firebase Imports
@@ -216,6 +231,11 @@
         const deleteModalContent = document.getElementById('deleteModalContent');
         const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
         const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
+        const compassBtn = document.getElementById('compassBtn');
+        const compassModal = document.getElementById('compassModal');
+        const compassModalContent = document.getElementById('compassModalContent');
+        const closeCompassBtn = document.getElementById('closeCompassBtn');
         
         // --- FIREBASE & APP STATE ---
         let db, auth, userId;
@@ -292,6 +312,16 @@
             } else {
                 deleteModalContent.classList.add('scale-95', 'opacity-0');
                 setTimeout(() => { deleteConfirmModal.classList.add('hidden'); }, 300);
+            }
+        }
+
+        function toggleCompassModal(show) {
+            if (show) {
+                compassModal.classList.remove('hidden');
+                setTimeout(() => { compassModalContent.classList.remove('scale-95', 'opacity-0'); }, 10);
+            } else {
+                compassModalContent.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => { compassModal.classList.add('hidden'); }, 300);
             }
         }
 
@@ -445,6 +475,13 @@
             recipeForm.addEventListener('submit', handleFormSubmit);
             cancelDeleteBtn.addEventListener('click', () => toggleDeleteModal(false));
             confirmDeleteBtn.addEventListener('click', confirmDeletion);
+            compassBtn.addEventListener('click', () => toggleCompassModal(true));
+            closeCompassBtn.addEventListener('click', () => toggleCompassModal(false));
+            compassModal.addEventListener('click', (e) => {
+                if (e.target === compassModal) {
+                    toggleCompassModal(false);
+                }
+            });
         }
 
         main();
