@@ -84,13 +84,6 @@
         
         <!-- Logged In Content -->
         <div id="loggedInContent" class="hidden">
-            <!-- Action Bar -->
-            <div class="flex justify-center mb-8">
-                <button id="addRecipeBtn" class="bg-[#6F4E37] hover:bg-[#4a3525] text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out">
-                    + Add New Recipe
-                </button>
-            </div>
-
             <!-- Recipe Cards Grid -->
             <div id="recipesContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
                 <!-- Recipe cards will be injected here by JavaScript -->
@@ -102,6 +95,13 @@
                 </svg>
                 <h3 class="mt-2 text-sm font-semibold text-stone-900">No recipes yet</h3>
                 <p class="mt-1 text-sm text-stone-500">Get started by creating a new recipe.</p>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="flex justify-center mt-8">
+                <button id="addRecipeBtn" class="bg-[#6F4E37] hover:bg-[#4a3525] text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    + Add New Recipe
+                </button>
             </div>
         </div>
     </div>
