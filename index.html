@@ -4,14 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elvin's Coffee Recipes</title>
+    <meta name="description" content="Dial in and track espresso recipes for Breville Bambino and Fellow Opus. Customize cards, save tasting notes, and troubleshoot extraction with the Coffee Compass.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☕</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body {
+        html, body {
             font-family: 'Inter', sans-serif;
             background-color: #F3EADF; /* A light, creamy coffee background */
+            scrollbar-width: thin;
+            scrollbar-color: #6F4E37 #F3EADF;
         }
         .font-lora {
             font-family: 'Lora', serif;
@@ -49,6 +53,10 @@
             border: 2px solid #D1D5DB;
             border-radius: 50%;
         }
+        input[type="color"]::-moz-color-swatch {
+            border: 2px solid #D1D5DB;
+            border-radius: 50%;
+        }
     </style>
 </head>
 <body class="text-stone-800">
@@ -56,14 +64,14 @@
     <!-- Auth Container -->
     <div class="absolute top-4 right-4">
         <div id="auth-container">
-            <button id="signInBtn" class="bg-white text-stone-700 font-semibold py-2 px-4 border border-stone-300 rounded-lg shadow hover:bg-stone-100 transition-colors flex items-center gap-2">
-                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.574l6.19,5.238C39.904,36.218,44,30.606,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
+            <button id="signInBtn" type="button" class="bg-white text-stone-700 font-semibold py-2 px-4 border border-stone-300 rounded-lg shadow hover:bg-stone-100 transition-colors flex items-center gap-2">
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.574l6.19,5.238C39.904,36.218,44,30.606,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
                 Sign in with Google
             </button>
         </div>
         <div id="user-info" class="hidden items-center gap-4">
             <p id="userName" class="text-stone-700 font-semibold"></p>
-            <button id="signOutBtn" class="bg-stone-600 hover:bg-stone-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition-colors">Sign Out</button>
+            <button id="signOutBtn" type="button" class="bg-stone-600 hover:bg-stone-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition-colors">Sign Out</button>
         </div>
     </div>
 
@@ -77,7 +85,7 @@
         </header>
 
         <!-- Demo Mode Banner (shown when not signed in) -->
-        <div id="demoBanner" class="max-w-2xl mx-auto mb-8 p-4 bg-white/80 backdrop-blur-sm border border-stone-200 rounded-xl shadow-xs">
+        <div id="demoBanner" class="max-w-2xl mx-auto mb-8 p-4 bg-white/80 backdrop-blur-sm border border-stone-200 rounded-xl shadow-sm">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-stone-700">
                 <div class="flex items-center gap-2.5 text-center sm:text-left">
                     <span class="text-xl">☕</span>
@@ -94,7 +102,8 @@
         
         <!-- Recipe Cards Grid -->
         <div id="recipesContainer" class="flex flex-wrap justify-center gap-6 md:gap-8">
-            <!-- Recipe cards will be injected here by JavaScript -->
+            <!-- Loading state / cards injected by JS -->
+            <div class="py-16 text-center text-stone-500 font-medium">Loading recipes...</div>
         </div>
 
         <!-- Placeholder for when there are no recipes -->
@@ -111,18 +120,18 @@
 
         <!-- Action Bar -->
         <div class="flex justify-center mt-8 space-x-4">
-            <button id="addRecipeBtn" class="bg-[#6F4E37] hover:bg-[#4a3525] text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out">
+            <button id="addRecipeBtn" type="button" class="bg-[#6F4E37] hover:bg-[#4a3525] text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out">
                 + Add New Recipe
             </button>
-            <button id="compassBtn" class="bg-white hover:bg-stone-100 text-stone-700 font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out">
+            <button id="compassBtn" type="button" class="bg-white hover:bg-stone-100 text-stone-700 font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out">
                 Compass
             </button>
         </div>
     </div>
 
     <!-- Modal for Add/Edit Recipe -->
-    <div id="recipeModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300 ease-in-out scale-95 opacity-0" id="modalContent">
+    <div id="recipeModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto transform transition-all duration-300 ease-in-out scale-95 opacity-0" id="modalContent">
             <form id="recipeForm" class="p-6 md:p-8">
                 <h2 id="modalTitle" class="font-lora text-2xl font-bold mb-6 text-[#4a3525]">Add a New Recipe</h2>
                 <input type="hidden" id="recipeId">
@@ -131,12 +140,12 @@
                 <div class="space-y-6">
                     <div>
                         <label for="beanName" class="block text-sm font-medium text-stone-700 mb-1">Coffee Bean Name</label>
-                        <input type="text" id="beanName" name="beanName" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#6F4E37] focus:border-[#6F4E37] transition-colors" placeholder="e.g., Ethiopian Yirgacheffe">
+                        <input type="text" id="beanName" name="beanName" maxlength="80" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#6F4E37] focus:border-[#6F4E37] transition-colors" placeholder="e.g., Ethiopian Yirgacheffe">
                     </div>
                     
                     <div>
                         <label for="country" class="block text-sm font-medium text-stone-700 mb-1">Country of Origin</label>
-                        <input type="text" id="country" name="country" class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#6F4E37] focus:border-[#6F4E37] transition-colors" placeholder="e.g., Ethiopia">
+                        <input type="text" id="country" name="country" maxlength="60" class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#6F4E37] focus:border-[#6F4E37] transition-colors" placeholder="e.g., Ethiopia">
                     </div>
 
                     <div>
@@ -159,7 +168,7 @@
                             <label class="cursor-pointer">
                                 <input type="radio" name="bannerTextColor" value="white" class="peer sr-only">
                                 <div class="text-center py-2 px-3 border border-stone-300 rounded-lg text-sm font-medium text-stone-700 peer-checked:border-[#6F4E37] peer-checked:bg-[#6F4E37]/10 peer-checked:text-[#4a3525] peer-checked:font-semibold transition-all flex items-center justify-center gap-1.5">
-                                    <span class="w-3 h-3 rounded-full bg-white border border-stone-400 inline-block shadow-xs"></span>
+                                    <span class="w-3 h-3 rounded-full bg-white border border-stone-400 inline-block shadow-sm"></span>
                                     White
                                 </div>
                             </label>
@@ -175,36 +184,36 @@
 
                     <div>
                         <label class="block text-xs font-medium text-stone-500 mb-1">Banner Preview</label>
-                        <div id="bannerPreview" class="h-20 rounded-xl p-3 flex flex-col items-center justify-center text-center transition-colors duration-200 shadow-sm overflow-hidden" style="background-color: #6F4E37; color: #FFFFFF;">
+                        <div id="bannerPreview" class="h-24 rounded-xl p-3 flex flex-col items-center justify-center text-center transition-colors duration-200 shadow-sm overflow-hidden" style="background-color: #6F4E37; color: #FFFFFF;">
                             <h4 id="previewBeanName" class="font-lora text-xl font-bold truncate max-w-full leading-tight">Coffee Bean Name</h4>
-                            <p id="previewCountry" class="font-lora text-sm mt-0.5 opacity-90 truncate max-w-full">Country of Origin</p>
+                            <p id="previewCountry" class="font-lora text-sm mt-1 opacity-90 truncate max-w-full">Country of Origin</p>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label for="coffeeAmount" class="block text-sm font-medium text-stone-700 mb-1">Coffee (g)</label>
-                            <input type="number" id="coffeeAmount" name="coffeeAmount" step="0.1" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#6F4E37] focus:border-[#6F4E37] transition-colors" placeholder="20">
+                            <input type="number" id="coffeeAmount" name="coffeeAmount" min="0.1" max="100" step="0.1" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#6F4E37] focus:border-[#6F4E37] transition-colors" placeholder="18">
                         </div>
                         <div>
                             <label for="grindSize" class="block text-sm font-medium text-stone-700 mb-1">Grind</label>
-                            <input type="text" id="grindSize" name="grindSize" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#6F4E37] focus:border-[#6F4E37] transition-colors" placeholder="2">
+                            <input type="text" id="grindSize" name="grindSize" maxlength="30" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#6F4E37] focus:border-[#6F4E37] transition-colors" placeholder="2.1">
                         </div>
                         <div>
                             <label for="yieldAmount" class="block text-sm font-medium text-stone-700 mb-1">Yield (g)</label>
-                            <input type="number" id="yieldAmount" name="yieldAmount" step="1" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#6F4E37] focus:border-[#6F4E37] transition-colors" placeholder="20">
+                            <input type="number" id="yieldAmount" name="yieldAmount" min="0.1" max="500" step="0.1" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#6F4E37] focus:border-[#6F4E37] transition-colors" placeholder="36">
                         </div>
                     </div>
 
                     <div>
                         <label for="notes" class="block text-sm font-medium text-stone-700 mb-1">Notes</label>
-                        <textarea id="notes" name="notes" rows="3" class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#6F4E37] focus:border-[#6F4E37] transition-colors" placeholder="e.g., Fruity notes"></textarea>
+                        <textarea id="notes" name="notes" rows="3" maxlength="500" class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#6F4E37] focus:border-[#6F4E37] transition-colors" placeholder="e.g., Bright berry aroma, rich chocolate finish"></textarea>
                     </div>
                 </div>
 
                 <!-- Form Actions -->
                 <div class="mt-8 flex justify-end gap-3">
-                    <button type="button" id="cancelBtn" class="px-6 py-2 border border-stone-300 rounded-lg text-stone-700 hover:bg-stone-100 transition-colors">Cancel</button>
+                    <button type="button" id="cancelBtn" class="px-6 py-2 border border-stone-300 rounded-lg text-stone-700 hover:bg-stone-100 transition-colors font-medium">Cancel</button>
                     <button type="submit" class="px-6 py-2 bg-[#6F4E37] hover:bg-[#4a3525] text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all">Save Recipe</button>
                 </div>
             </form>
@@ -212,28 +221,32 @@
     </div>
 
     <!-- Deletion Confirmation Modal -->
-    <div id="deleteConfirmModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+    <div id="deleteConfirmModal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-8 text-center transform transition-all duration-300 ease-in-out scale-95 opacity-0" id="deleteModalContent">
-            <h3 class="text-xl font-semibold text-stone-800">Are you sure?</h3>
-            <p class="mt-2 text-stone-600">Do you really want to delete this recipe? This action cannot be undone.</p>
+            <h3 id="deleteModalTitle" class="text-xl font-semibold text-stone-800">Are you sure?</h3>
+            <p class="mt-2 text-stone-600 text-sm">Do you really want to delete <span id="deleteRecipeName" class="font-semibold text-stone-800">this recipe</span>? This action cannot be undone.</p>
             <div class="mt-6 flex justify-center gap-4">
-                <button id="cancelDeleteBtn" class="px-8 py-2 border border-stone-300 rounded-lg text-stone-700 hover:bg-stone-100 transition-colors font-semibold">Cancel</button>
-                <button id="confirmDeleteBtn" class="px-8 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all">Delete</button>
+                <button type="button" id="cancelDeleteBtn" class="px-6 py-2 border border-stone-300 rounded-lg text-stone-700 hover:bg-stone-100 transition-colors font-semibold">Cancel</button>
+                <button type="button" id="confirmDeleteBtn" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all">Delete</button>
             </div>
         </div>
     </div>
 
     <!-- Compass Image Modal -->
-    <div id="compassModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg relative transform transition-all duration-300 ease-in-out scale-95 opacity-0" id="compassModalContent">
-            <button id="closeCompassBtn" class="absolute top-4 right-4 text-stone-600 hover:text-stone-900">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div id="compassModal" role="dialog" aria-modal="true" aria-labelledby="compassModalTitle" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg relative transform transition-all duration-300 ease-in-out scale-95 opacity-0 overflow-hidden" id="compassModalContent">
+            <h2 id="compassModalTitle" class="sr-only">Coffee Flavor Compass</h2>
+            <button id="closeCompassBtn" type="button" aria-label="Close compass" class="absolute top-4 right-4 bg-white/80 hover:bg-white text-stone-700 hover:text-stone-900 rounded-full p-2 shadow-md transition-all z-10">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
-            <img src="compass.jpg" alt="Coffee Compass" class="rounded-2xl">
+            <img src="compass.jpg" alt="Coffee Compass" width="1551" height="1600" loading="lazy" class="w-full h-auto rounded-2xl">
         </div>
     </div>
+
+    <!-- Toast Notifications Container -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
     
     <script type="module">
         // Firebase Imports
@@ -241,17 +254,16 @@
         import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, addDoc, setDoc, deleteDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- IMPORTANT: PASTE YOUR FIREBASE CONFIGURATION HERE ---
-        // To get this, go to your Firebase project, click the gear icon > Project settings,
-        // then scroll down to "Your apps" and click the "</>" icon to find your web app's config.
-        // DO NOT COMMIT THIS FILE WITH YOUR KEYS FILLED IN.
+        // --- FIREBASE CONFIGURATION ---
+        // Note: Firebase Web API keys are public client identifiers. Cloud data access is secured
+        // via Firestore Security Rules (restricting users to: users/{userId}/coffee_recipes).
         const firebaseConfig = {
-        apiKey: "AIzaSyC7XjObhFPNIb9lz7HjMT_JYoNu4yUlpCg",
-        authDomain: "coffee-6ef98.firebaseapp.com",
-        projectId: "coffee-6ef98",
-        storageBucket: "coffee-6ef98.firebasestorage.app",
-        messagingSenderId: "168593062496",
-        appId: "1:168593062496:web:8c52d52d588c1b06116105"
+            apiKey: "AIzaSyC7XjObhFPNIb9lz7HjMT_JYoNu4yUlpCg",
+            authDomain: "coffee-6ef98.firebaseapp.com",
+            projectId: "coffee-6ef98",
+            storageBucket: "coffee-6ef98.firebasestorage.app",
+            messagingSenderId: "168593062496",
+            appId: "1:168593062496:web:8c52d52d588c1b06116105"
         };
 
         // --- DOM ELEMENTS ---
@@ -281,6 +293,7 @@
 
         const deleteConfirmModal = document.getElementById('deleteConfirmModal');
         const deleteModalContent = document.getElementById('deleteModalContent');
+        const deleteRecipeNameEl = document.getElementById('deleteRecipeName');
         const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
         const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
 
@@ -288,7 +301,35 @@
         const compassModal = document.getElementById('compassModal');
         const compassModalContent = document.getElementById('compassModalContent');
         const closeCompassBtn = document.getElementById('closeCompassBtn');
+        const toastContainer = document.getElementById('toastContainer');
         
+        // --- TOAST NOTIFICATIONS & SANITIZATION ---
+        function showToast(message, type = 'info') {
+            if (!toastContainer) return;
+            const toast = document.createElement('div');
+            const bg = type === 'error' ? 'bg-red-600 text-white' : type === 'success' ? 'bg-[#6F4E37] text-white' : 'bg-stone-800 text-white';
+            toast.className = `${bg} px-4 py-3 rounded-xl shadow-xl text-sm font-medium transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto flex items-center gap-2 max-w-sm`;
+            toast.textContent = message;
+            toastContainer.appendChild(toast);
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
         // --- DEMO RECIPES & STORAGE ---
         const DEMO_STORAGE_KEY = 'cafe_demo_recipes';
         const DEFAULT_DEMO_RECIPES = [
@@ -301,7 +342,8 @@
                 coffeeAmount: 18,
                 grindSize: '2.1',
                 yieldAmount: 38,
-                notes: 'Bright bergamot aroma, jasmine florals, sweet peach notes with a silky tea-like finish.'
+                notes: 'Bright bergamot aroma, jasmine florals, sweet peach notes with a silky tea-like finish.',
+                createdAt: 1700000001000
             },
             {
                 id: 'demo-colombia-huila',
@@ -312,7 +354,8 @@
                 coffeeAmount: 19,
                 grindSize: '2.0',
                 yieldAmount: 38,
-                notes: 'Rich dark chocolate fudge, toasted hazelnut, and caramel toffee with a velvety crema.'
+                notes: 'Rich dark chocolate fudge, toasted hazelnut, and caramel toffee with a velvety crema.',
+                createdAt: 1700000000000
             }
         ];
 
@@ -329,7 +372,7 @@
                 console.warn('Failed to load demo recipes from localStorage:', e);
             }
             saveDemoRecipes(DEFAULT_DEMO_RECIPES);
-            return [...DEFAULT_DEMO_RECIPES];
+            return JSON.parse(JSON.stringify(DEFAULT_DEMO_RECIPES));
         }
 
         function saveDemoRecipes(recipes) {
@@ -343,8 +386,9 @@
         function resetDemoRecipes() {
             saveDemoRecipes(DEFAULT_DEMO_RECIPES);
             if (!userId) {
-                allRecipes = [...DEFAULT_DEMO_RECIPES];
+                allRecipes = JSON.parse(JSON.stringify(DEFAULT_DEMO_RECIPES));
                 renderRecipes(allRecipes);
+                showToast('Demo recipes reset to defaults.', 'success');
             }
         }
         
@@ -443,11 +487,17 @@
             recipesContainer.innerHTML = recipes.map(recipe => {
                 const bannerBg = recipe.bannerColor || '#6F4E37';
                 const bannerTextColor = resolveBannerTextColor(bannerBg, recipe.bannerTextColor);
+                const safeBeanName = escapeHtml(recipe.beanName);
+                const safeCountry = escapeHtml(recipe.country || '');
+                const safeGrind = escapeHtml(recipe.grindSize);
+                const safeNotes = escapeHtml(recipe.notes || '');
+                const safeId = escapeHtml(recipe.id);
+
                 return `
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300 w-72">
-                    <div class="h-40 p-4 flex flex-col items-center justify-center text-center" style="background-color: ${bannerBg}; color: ${bannerTextColor};">
-                        <h3 class="font-lora text-4xl font-bold break-words" style="color: ${bannerTextColor};">${recipe.beanName}</h3>
-                        <p class="font-lora text-2xl mt-1 country-origin" style="color: ${bannerTextColor};">${recipe.country || ''}</p>
+                    <div class="h-36 p-4 flex flex-col items-center justify-center text-center overflow-hidden" style="background-color: ${bannerBg}; color: ${bannerTextColor};">
+                        <h3 class="font-lora text-2xl font-bold leading-tight line-clamp-2 break-words text-center" style="color: ${bannerTextColor};">${safeBeanName}</h3>
+                        ${safeCountry ? `<p class="font-lora text-sm font-medium mt-1 opacity-90 truncate max-w-full" style="color: ${bannerTextColor};">${safeCountry}</p>` : ''}
                     </div>
                     <div class="p-6 flex-grow flex flex-col justify-between">
                         <div class="grid grid-cols-3 text-center divide-x divide-stone-200">
@@ -457,7 +507,7 @@
                             </div>
                             <div>
                                 <p class="text-sm text-stone-500">Grind</p>
-                                <p class="font-semibold text-xl">${recipe.grindSize}</p>
+                                <p class="font-semibold text-xl">${safeGrind}</p>
                             </div>
                             <div>
                                 <p class="text-sm text-stone-500">Yield</p>
@@ -465,16 +515,16 @@
                             </div>
                         </div>
 
-                        ${recipe.notes ? `
+                        ${safeNotes ? `
                         <div class="mt-4 pt-4 border-t border-stone-200">
                             <p class="text-sm text-stone-500 mb-1">Notes</p>
-                            <p class="text-stone-700 whitespace-pre-wrap">${recipe.notes}</p>
+                            <p class="text-stone-700 text-sm whitespace-pre-wrap">${safeNotes}</p>
                         </div>
                         ` : ''}
 
                         <div class="mt-6 pt-4 border-t border-stone-200 flex justify-end gap-2">
-                            <button class="edit-btn text-sm text-stone-600 hover:text-blue-600 font-semibold py-1 px-3 rounded" data-id="${recipe.id}">Edit</button>
-                            <button class="delete-btn text-sm text-stone-600 hover:text-red-600 font-semibold py-1 px-3 rounded" data-id="${recipe.id}">Delete</button>
+                            <button type="button" class="edit-btn text-sm text-stone-600 hover:text-blue-600 font-semibold py-1 px-3 rounded transition-colors" data-id="${safeId}" aria-label="Edit ${safeBeanName}">Edit</button>
+                            <button type="button" class="delete-btn text-sm text-stone-600 hover:text-red-600 font-semibold py-1 px-3 rounded transition-colors" data-id="${safeId}" aria-label="Delete ${safeBeanName}">Delete</button>
                         </div>
                     </div>
                 </div>
@@ -485,33 +535,58 @@
             document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', handleDeleteClick));
         }
 
+        function setBodyScrollLock(locked) {
+            if (locked) {
+                document.body.classList.add('overflow-hidden');
+            } else {
+                const anyModalOpen = !recipeModal.classList.contains('hidden') ||
+                                     !deleteConfirmModal.classList.contains('hidden') ||
+                                     !compassModal.classList.contains('hidden');
+                if (!anyModalOpen) {
+                    document.body.classList.remove('overflow-hidden');
+                }
+            }
+        }
+
         function toggleFormModal(show) {
             if (show) {
                 recipeModal.classList.remove('hidden');
+                setBodyScrollLock(true);
                 setTimeout(() => { modalContent.classList.remove('scale-95', 'opacity-0'); }, 10);
             } else {
                 modalContent.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => { recipeModal.classList.add('hidden'); }, 300);
+                setTimeout(() => {
+                    recipeModal.classList.add('hidden');
+                    setBodyScrollLock(false);
+                }, 300);
             }
         }
         
         function toggleDeleteModal(show) {
             if (show) {
                 deleteConfirmModal.classList.remove('hidden');
+                setBodyScrollLock(true);
                 setTimeout(() => { deleteModalContent.classList.remove('scale-95', 'opacity-0'); }, 10);
             } else {
                 deleteModalContent.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => { deleteConfirmModal.classList.add('hidden'); }, 300);
+                setTimeout(() => {
+                    deleteConfirmModal.classList.add('hidden');
+                    setBodyScrollLock(false);
+                }, 300);
             }
         }
 
         function toggleCompassModal(show) {
             if (show) {
                 compassModal.classList.remove('hidden');
+                setBodyScrollLock(true);
                 setTimeout(() => { compassModalContent.classList.remove('scale-95', 'opacity-0'); }, 10);
             } else {
                 compassModalContent.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => { compassModal.classList.add('hidden'); }, 300);
+                setTimeout(() => {
+                    compassModal.classList.add('hidden');
+                    setBodyScrollLock(false);
+                }, 300);
             }
         }
 
@@ -529,15 +604,43 @@
             e.preventDefault();
 
             const id = document.getElementById('recipeId').value;
+            const beanName = beanNameInput.value.trim();
+            const country = countryInput.value.trim();
+            const coffeeAmount = parseFloat(document.getElementById('coffeeAmount').value);
+            const grindSize = document.getElementById('grindSize').value.trim();
+            const yieldAmount = parseFloat(document.getElementById('yieldAmount').value);
+            const notes = document.getElementById('notes').value.trim();
+
+            if (!beanName) {
+                showToast('Please enter a coffee bean name.', 'error');
+                return;
+            }
+            if (isNaN(coffeeAmount) || coffeeAmount <= 0) {
+                showToast('Please enter a valid coffee amount.', 'error');
+                return;
+            }
+            if (!grindSize) {
+                showToast('Please enter a grind setting.', 'error');
+                return;
+            }
+            if (isNaN(yieldAmount) || yieldAmount <= 0) {
+                showToast('Please enter a valid yield amount.', 'error');
+                return;
+            }
+
+            const existingRecipe = allRecipes.find(r => r.id === id);
+            const createdAt = existingRecipe?.createdAt || Date.now();
+
             const recipeData = {
-                beanName: document.getElementById('beanName').value,
-                country: document.getElementById('country').value,
+                beanName,
+                country,
                 bannerColor: bannerColorInput.value,
                 bannerTextColor: getSelectedBannerTextColor(),
-                coffeeAmount: parseFloat(document.getElementById('coffeeAmount').value),
-                grindSize: document.getElementById('grindSize').value,
-                yieldAmount: parseFloat(document.getElementById('yieldAmount').value),
-                notes: document.getElementById('notes').value,
+                coffeeAmount,
+                grindSize,
+                yieldAmount,
+                notes,
+                createdAt
             };
 
             if (!userId) {
@@ -554,6 +657,7 @@
                 saveDemoRecipes(allRecipes);
                 renderRecipes(allRecipes);
                 toggleFormModal(false);
+                showToast('Recipe saved locally.', 'success');
                 return;
             }
 
@@ -565,8 +669,10 @@
                     await addDoc(collection(db, collectionPath), recipeData);
                 }
                 toggleFormModal(false);
+                showToast('Recipe saved to cloud.', 'success');
             } catch (error) {
                 console.error("Error saving recipe: ", error);
+                showToast("Failed to save recipe: " + (error.message || 'Unknown error'), "error");
             }
         }
 
@@ -576,13 +682,13 @@
 
             if (!recipeToEdit) {
                 console.error("Recipe not found for editing!");
-                alert("Could not find recipe data to edit. Please try again.");
+                showToast("Could not find recipe data to edit.", "error");
                 return;
             }
 
             document.getElementById('recipeId').value = recipeToEdit.id;
-            document.getElementById('beanName').value = recipeToEdit.beanName;
-            document.getElementById('country').value = recipeToEdit.country || '';
+            beanNameInput.value = recipeToEdit.beanName;
+            countryInput.value = recipeToEdit.country || '';
             bannerColorInput.value = recipeToEdit.bannerColor || '#6F4E37';
             setBannerTextColorRadio(recipeToEdit.bannerTextColor || 'auto');
             document.getElementById('coffeeAmount').value = recipeToEdit.coffeeAmount;
@@ -597,6 +703,10 @@
 
         function handleDeleteClick(e) {
             recipeIdToDelete = e.target.dataset.id;
+            const recipe = allRecipes.find(r => r.id === recipeIdToDelete);
+            if (deleteRecipeNameEl) {
+                deleteRecipeNameEl.textContent = recipe ? `"${recipe.beanName}"` : 'this recipe';
+            }
             toggleDeleteModal(true);
         }
 
@@ -610,13 +720,16 @@
                 renderRecipes(allRecipes);
                 recipeIdToDelete = null;
                 toggleDeleteModal(false);
+                showToast('Recipe deleted.', 'info');
                 return;
             }
 
             try {
                 await deleteDoc(doc(db, `users/${userId}/coffee_recipes`, recipeIdToDelete));
+                showToast('Recipe deleted from cloud.', 'info');
             } catch (error) {
                 console.error("Error deleting recipe: ", error);
+                showToast("Failed to delete recipe: " + (error.message || 'Unknown error'), "error");
             } finally {
                 recipeIdToDelete = null;
                 toggleDeleteModal(false);
@@ -633,10 +746,12 @@
                 querySnapshot.forEach((doc) => {
                     recipes.push({ id: doc.id, ...doc.data() });
                 });
+                recipes.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
                 allRecipes = recipes;
                 renderRecipes(allRecipes);
             }, (error) => {
                 console.error("Error fetching recipes:", error);
+                showToast("Could not load cloud recipes: " + (error.message || 'Access denied'), "error");
                 renderRecipes([]);
             });
         }
@@ -648,14 +763,19 @@
                 await signInWithPopup(auth, provider);
             } catch (error) {
                 console.error("Error during sign-in:", error);
+                if (error.code !== 'auth/popup-closed-by-user') {
+                    showToast("Google sign-in failed: " + (error.message || 'Error'), "error");
+                }
             }
         }
 
         async function handleSignOut() {
             try {
                 await signOut(auth);
+                showToast('Signed out successfully.', 'info');
             } catch (error) {
                 console.error("Error during sign-out:", error);
+                showToast("Sign-out failed: " + (error.message || 'Error'), "error");
             }
         }
 
@@ -664,10 +784,6 @@
             const app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
-            
-            // Initial render with demo recipes so unauthenticated users immediately see them
-            allRecipes = loadDemoRecipes();
-            renderRecipes(allRecipes);
 
             onAuthStateChanged(auth, (user) => {
                 if (user) {
@@ -692,7 +808,7 @@
                 }
             });
 
-            // Event Listeners
+            // Button Event Listeners
             signInBtn.addEventListener('click', handleGoogleSignIn);
             signOutBtn.addEventListener('click', handleSignOut);
             addRecipeBtn.addEventListener('click', openAddModal);
@@ -704,9 +820,24 @@
             closeCompassBtn.addEventListener('click', () => toggleCompassModal(false));
             if (resetDemoBtn) resetDemoBtn.addEventListener('click', resetDemoRecipes);
             if (restoreEmptyDemoBtn) restoreEmptyDemoBtn.addEventListener('click', resetDemoRecipes);
+
+            // Backdrop click dismiss for all modals
+            recipeModal.addEventListener('click', (e) => {
+                if (e.target === recipeModal) toggleFormModal(false);
+            });
+            deleteConfirmModal.addEventListener('click', (e) => {
+                if (e.target === deleteConfirmModal) toggleDeleteModal(false);
+            });
             compassModal.addEventListener('click', (e) => {
-                if (e.target === compassModal) {
-                    toggleCompassModal(false);
+                if (e.target === compassModal) toggleCompassModal(false);
+            });
+
+            // Global Escape key listener to close active modals
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (!recipeModal.classList.contains('hidden')) toggleFormModal(false);
+                    if (!deleteConfirmModal.classList.contains('hidden')) toggleDeleteModal(false);
+                    if (!compassModal.classList.contains('hidden')) toggleCompassModal(false);
                 }
             });
 
