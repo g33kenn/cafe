@@ -136,6 +136,40 @@
                         </div>
                     </div>
 
+                    <div>
+                        <label class="block text-sm font-medium text-stone-700 mb-1">Banner Text Color</label>
+                        <div class="grid grid-cols-3 gap-2" id="bannerTextColorContainer">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="bannerTextColor" value="auto" checked class="peer sr-only">
+                                <div class="text-center py-2 px-3 border border-stone-300 rounded-lg text-sm font-medium text-stone-700 peer-checked:border-[#6F4E37] peer-checked:bg-[#6F4E37]/10 peer-checked:text-[#4a3525] peer-checked:font-semibold transition-all">
+                                    Auto
+                                </div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="bannerTextColor" value="white" class="peer sr-only">
+                                <div class="text-center py-2 px-3 border border-stone-300 rounded-lg text-sm font-medium text-stone-700 peer-checked:border-[#6F4E37] peer-checked:bg-[#6F4E37]/10 peer-checked:text-[#4a3525] peer-checked:font-semibold transition-all flex items-center justify-center gap-1.5">
+                                    <span class="w-3 h-3 rounded-full bg-white border border-stone-400 inline-block shadow-xs"></span>
+                                    White
+                                </div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="bannerTextColor" value="black" class="peer sr-only">
+                                <div class="text-center py-2 px-3 border border-stone-300 rounded-lg text-sm font-medium text-stone-700 peer-checked:border-[#6F4E37] peer-checked:bg-[#6F4E37]/10 peer-checked:text-[#4a3525] peer-checked:font-semibold transition-all flex items-center justify-center gap-1.5">
+                                    <span class="w-3 h-3 rounded-full bg-black inline-block"></span>
+                                    Black
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-stone-500 mb-1">Banner Preview</label>
+                        <div id="bannerPreview" class="h-20 rounded-xl p-3 flex flex-col items-center justify-center text-center transition-colors duration-200 shadow-sm overflow-hidden" style="background-color: #6F4E37; color: #FFFFFF;">
+                            <h4 id="previewBeanName" class="font-lora text-xl font-bold truncate max-w-full leading-tight">Coffee Bean Name</h4>
+                            <p id="previewCountry" class="font-lora text-sm mt-0.5 opacity-90 truncate max-w-full">Country of Origin</p>
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label for="coffeeAmount" class="block text-sm font-medium text-stone-700 mb-1">Coffee (g)</label>
@@ -226,6 +260,12 @@
         const recipeForm = document.getElementById('recipeForm');
         const cancelBtn = document.getElementById('cancelBtn');
         const modalTitle = document.getElementById('modalTitle');
+        const bannerColorInput = document.getElementById('bannerColor');
+        const beanNameInput = document.getElementById('beanName');
+        const countryInput = document.getElementById('country');
+        const bannerPreview = document.getElementById('bannerPreview');
+        const previewBeanName = document.getElementById('previewBeanName');
+        const previewCountry = document.getElementById('previewCountry');
 
         const deleteConfirmModal = document.getElementById('deleteConfirmModal');
         const deleteModalContent = document.getElementById('deleteModalContent');
@@ -236,6 +276,74 @@
         const compassModal = document.getElementById('compassModal');
         const compassModalContent = document.getElementById('compassModalContent');
         const closeCompassBtn = document.getElementById('closeCompassBtn');
+        
+        // --- CONTRAST & BANNER COLOR HELPERS ---
+        /**
+         * Calculates whether white or black text provides better contrast
+         * for a given background hex color based on WCAG 2.0 relative luminance.
+         */
+        function getContrastingTextColor(hexColor) {
+            if (!hexColor) return '#FFFFFF';
+            let hex = hexColor.replace('#', '').trim();
+            if (hex.length === 3) {
+                hex = hex.split('').map(c => c + c).join('');
+            }
+            if (hex.length !== 6) return '#FFFFFF';
+
+            const r = parseInt(hex.substring(0, 2), 16) / 255;
+            const g = parseInt(hex.substring(2, 4), 16) / 255;
+            const b = parseInt(hex.substring(4, 6), 16) / 255;
+
+            const toLinear = (c) => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+            const rL = toLinear(r);
+            const gL = toLinear(g);
+            const bL = toLinear(b);
+
+            const luminance = 0.2126 * rL + 0.7152 * gL + 0.0722 * bL;
+
+            // Threshold: luminance <= 0.179 => white text; > 0.179 => black text
+            return luminance > 0.179 ? '#000000' : '#FFFFFF';
+        }
+
+        /**
+         * Resolves the text color based on user preference ('white', 'black', or 'auto' / default)
+         */
+        function resolveBannerTextColor(bannerColor, textSetting) {
+            if (textSetting === 'white') return '#FFFFFF';
+            if (textSetting === 'black') return '#000000';
+            return getContrastingTextColor(bannerColor || '#6F4E37');
+        }
+
+        function getSelectedBannerTextColor() {
+            const checkedRadio = document.querySelector('input[name="bannerTextColor"]:checked');
+            return checkedRadio ? checkedRadio.value : 'auto';
+        }
+
+        function setBannerTextColorRadio(val) {
+            const targetVal = val || 'auto';
+            const radio = document.querySelector(`input[name="bannerTextColor"][value="${targetVal}"]`);
+            if (radio) {
+                radio.checked = true;
+            }
+        }
+
+        function updateBannerPreview() {
+            if (!bannerPreview) return;
+            const color = bannerColorInput.value || '#6F4E37';
+            const textSetting = getSelectedBannerTextColor();
+            const resolvedTextColor = resolveBannerTextColor(color, textSetting);
+
+            bannerPreview.style.backgroundColor = color;
+            bannerPreview.style.color = resolvedTextColor;
+            if (previewBeanName) {
+                previewBeanName.style.color = resolvedTextColor;
+                previewBeanName.textContent = beanNameInput.value.trim() || 'Coffee Bean Name';
+            }
+            if (previewCountry) {
+                previewCountry.style.color = resolvedTextColor;
+                previewCountry.textContent = countryInput.value.trim() || 'Country of Origin';
+            }
+        }
         
         // --- FIREBASE & APP STATE ---
         let db, auth, userId;
@@ -254,11 +362,14 @@
             }
             
             noRecipesMessage.classList.add('hidden');
-            recipesContainer.innerHTML = recipes.map(recipe => `
+            recipesContainer.innerHTML = recipes.map(recipe => {
+                const bannerBg = recipe.bannerColor || '#6F4E37';
+                const bannerTextColor = resolveBannerTextColor(bannerBg, recipe.bannerTextColor);
+                return `
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300 w-72">
-                    <div class="h-40 p-4 flex flex-col items-center justify-center text-center" style="background-color: ${recipe.bannerColor || '#6F4E37'};">
-                        <h3 class="font-lora text-4xl font-bold text-black break-words">${recipe.beanName}</h3>
-                        <p class="font-lora text-2xl text-black mt-1 country-origin">${recipe.country || ''}</p>
+                    <div class="h-40 p-4 flex flex-col items-center justify-center text-center" style="background-color: ${bannerBg}; color: ${bannerTextColor};">
+                        <h3 class="font-lora text-4xl font-bold break-words" style="color: ${bannerTextColor};">${recipe.beanName}</h3>
+                        <p class="font-lora text-2xl mt-1 country-origin" style="color: ${bannerTextColor};">${recipe.country || ''}</p>
                     </div>
                     <div class="p-6 flex-grow flex flex-col justify-between">
                         <div class="grid grid-cols-3 text-center divide-x divide-stone-200">
@@ -289,7 +400,8 @@
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `;
+            }).join('');
 
             document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', handleEditClick));
             document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', handleDeleteClick));
@@ -328,8 +440,10 @@
         function openAddModal() {
             recipeForm.reset();
             document.getElementById('recipeId').value = '';
-            document.getElementById('bannerColor').value = '#6F4E37';
+            bannerColorInput.value = '#6F4E37';
+            setBannerTextColorRadio('auto');
             modalTitle.textContent = 'Add a New Recipe';
+            updateBannerPreview();
             toggleFormModal(true);
         }
 
@@ -341,7 +455,8 @@
             const recipeData = {
                 beanName: document.getElementById('beanName').value,
                 country: document.getElementById('country').value,
-                bannerColor: document.getElementById('bannerColor').value,
+                bannerColor: bannerColorInput.value,
+                bannerTextColor: getSelectedBannerTextColor(),
                 coffeeAmount: parseFloat(document.getElementById('coffeeAmount').value),
                 grindSize: document.getElementById('grindSize').value,
                 yieldAmount: parseFloat(document.getElementById('yieldAmount').value),
@@ -374,13 +489,15 @@
             document.getElementById('recipeId').value = recipeToEdit.id;
             document.getElementById('beanName').value = recipeToEdit.beanName;
             document.getElementById('country').value = recipeToEdit.country || '';
-            document.getElementById('bannerColor').value = recipeToEdit.bannerColor || '#6F4E37';
+            bannerColorInput.value = recipeToEdit.bannerColor || '#6F4E37';
+            setBannerTextColorRadio(recipeToEdit.bannerTextColor || 'auto');
             document.getElementById('coffeeAmount').value = recipeToEdit.coffeeAmount;
             document.getElementById('grindSize').value = recipeToEdit.grindSize;
             document.getElementById('yieldAmount').value = recipeToEdit.yieldAmount;
             document.getElementById('notes').value = recipeToEdit.notes || '';
             
             modalTitle.textContent = 'Edit Recipe';
+            updateBannerPreview();
             toggleFormModal(true);
         }
 
@@ -481,6 +598,14 @@
                 if (e.target === compassModal) {
                     toggleCompassModal(false);
                 }
+            });
+
+            // Live Preview Listeners
+            bannerColorInput.addEventListener('input', updateBannerPreview);
+            beanNameInput.addEventListener('input', updateBannerPreview);
+            countryInput.addEventListener('input', updateBannerPreview);
+            document.querySelectorAll('input[name="bannerTextColor"]').forEach(radio => {
+                radio.addEventListener('change', updateBannerPreview);
             });
         }
 
